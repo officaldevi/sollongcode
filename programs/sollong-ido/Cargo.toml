@@ -1,0 +1,21 @@
+[package]
+name = "sollong-ido"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "sollong_ido"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+merkletreers = "1.2.0"
