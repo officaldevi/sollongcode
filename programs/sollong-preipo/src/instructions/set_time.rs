@@ -1,6 +1,5 @@
 use anchor_lang::prelude::*;
 
-use super::owner::OwOp;
 use crate::errors::SollongError;
 use crate::instructions::OwOpInRound;
 

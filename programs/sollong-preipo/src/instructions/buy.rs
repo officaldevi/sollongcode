@@ -17,7 +17,7 @@ pub struct Buy<'info> {
     pub round_stock: Account<'info, RoundStock>,
     #[account(mut, seeds = [ & [round_stock.index][..], b"user-data", user.key().as_ref(),], bump = user_data.bump)]
     pub user_data: Account<'info, UserData>,
-    
+
     #[account(mut, seeds = [ & [round_stock.index][..], b"financial", & [user.key().as_ref().last().unwrap() % round_stock.financial_index][..]], bump = financial.bump)]
     pub financial: Account<'info, Financial>,
     pub system_program: Program<'info, System>,
@@ -28,15 +28,14 @@ pub fn buy(ctx: Context<Buy>, buy_shares: u32) -> Result<()> {
     let user_data = &mut ctx.accounts.user_data;
     let financial = &mut ctx.accounts.financial;
 
-    require!(!round_stock.whitelist_enabled, SollongError::FunctionCallError);
+    require!(!round_stock.whitelist_enabled, SollongError::FunctionCallError2);
 
     let user_buy_shares = buy_shares + user_data.buy_shares;
 
-    require!(buy_shares > 0
-            && user_buy_shares >= round_stock.min_share
-            && user_buy_shares <= round_stock.max_share
-            && buy_shares <= round_stock.remaining_shares,
-            SollongError::InsufficientShares);
+    require!(buy_shares > 0, SollongError::BuySharesError);
+    require!(user_buy_shares >= round_stock.min_share, SollongError::UserBuySharesLimitMinimum);
+    require!(user_buy_shares <= round_stock.max_share, SollongError::UserBuySharesLimitMaximum);
+    require!(buy_shares <= round_stock.remaining_shares, SollongError::InsufficientShares);
 
     let current_timestamp = ctx.accounts.clock.unix_timestamp as u64;
 
@@ -65,24 +64,25 @@ pub fn buy_from_whitelist(ctx: Context<Buy>, buy_shares: u32, proofs: Vec<ProofN
 
     let user_pub_key = ctx.accounts.user.key();
 
-    
+
     require!(round_stock.whitelist_enabled, SollongError::FunctionCallError);
+    require!(round_stock.merkle_root_hash.iter().all(|&x|x==0), SollongError::MerkleError);
 
     let l: Vec<Node> = proofs.into_iter().map(ProofNode::into).collect();
 
     let mut leaf = [0u8; 32];
     hash_it(user_pub_key.as_ref(), &mut leaf);
 
-    
-    require!(round_stock.merkel_root_hash == merkle_proof_check(l, leaf), SollongError::UserNotVerified);
+
+    require!(round_stock.merkle_root_hash == merkle_proof_check(l, leaf), SollongError::UserNotVerified);
 
     let user_buy_shares = buy_shares + user_data.buy_shares;
 
-    require!(buy_shares > 0
-            && user_buy_shares >= round_stock.min_share
-            && user_buy_shares <= round_stock.max_share
-            && buy_shares <= round_stock.remaining_shares,
-            SollongError::InsufficientShares);
+    require!(buy_shares > 0, SollongError::BuySharesError);
+    require!(user_buy_shares >= round_stock.min_share, SollongError::UserBuySharesLimitMinimum);
+    require!(user_buy_shares <= round_stock.max_share, SollongError::UserBuySharesLimitMaximum);
+    require!(buy_shares <= round_stock.remaining_shares, SollongError::InsufficientShares);
+
 
     let current_timestamp = ctx.accounts.clock.unix_timestamp as u64;
 

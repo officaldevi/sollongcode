@@ -11,7 +11,7 @@ pub struct CreateFinancial<'info> {
     #[account(mut, seeds = [&[round_stock.index][..], b"round-stock"], bump = round_stock.bump)]
     pub round_stock: Account<'info, RoundStock>,
     /// seeds = [round_index, "financial", financial_index]
-    #[account(init, payer = user, space=64, seeds = [&[round_stock.index][..], "financial".as_bytes(), &[round_stock.financial_index][..]], bump)]
+    #[account(init, payer = user, space=19, seeds = [&[round_stock.index][..], "financial".as_bytes(), &[round_stock.financial_index][..]], bump)]
     pub financial: Account<'info, Financial>,
     pub system_program: Program<'info, System>
 }
@@ -22,8 +22,9 @@ pub fn create_financial_account(ctx: Context<CreateFinancial>) -> Result<()> {
     let financial = &mut ctx.accounts.financial;
     let round = &mut ctx.accounts.round_stock;
 
+    require!(round.financial_index == 0, SollongError::FinancialCreateError);
+
     financial.round_index = round.index;
-    financial.round_index = round.financial_index;
     financial.bump = ctx.bumps.financial;
     financial.total = 0;
 

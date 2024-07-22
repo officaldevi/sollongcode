@@ -26,7 +26,7 @@ pub struct UserData {
 pub struct RoundStock {
     pub index: u8,
     pub whitelist_enabled: bool,
-    pub merkel_root_hash: [u8;32],
+    pub merkle_root_hash: [u8;32],
     pub financial_index: u8,
     pub total_shares: u32,
     pub remaining_shares: u32,
@@ -37,4 +37,3 @@ pub struct RoundStock {
     pub per_price: u64,
     pub bump: u8
 }
-

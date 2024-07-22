@@ -10,7 +10,7 @@ pub struct OwWithdraw<'info> {
     pub metadata: Account<'info, Metadata>,
     #[account(mut, seeds = [ &[financial.round_index][..], b"financial", &[financial.index][..]], bump = financial.bump)]
     pub financial: Account<'info, Financial>,
-    
+    /// CHECK: The withdrawal address is manually specified by the owner and does not require detection
     #[account(mut)]
     pub to: AccountInfo<'info>,
 }

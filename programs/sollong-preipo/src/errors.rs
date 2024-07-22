@@ -14,6 +14,16 @@ pub enum SollongError {
     MerkleError,
     #[msg("Please call the 'buy' method for non-whitelisted purchases")]
     FunctionCallError,
+    #[msg("Please call the 'buy_from_whitelist' method for whitelisted purchases")]
+    FunctionCallError2,
     #[msg("The user does not have purchasing qualifications")]
-    UserNotVerified
+    UserNotVerified,
+    #[msg("This round of finance has been created")]
+    FinancialCreateError,
+    #[msg("The purchase amount must be greater than 0")]
+    BuySharesError,
+    #[msg("The user's purchase share does not meet the minimum share requirement")]
+    UserBuySharesLimitMinimum,
+    #[msg("The user's purchase share exceeds the maximum purchase share")]
+    UserBuySharesLimitMaximum
 }
