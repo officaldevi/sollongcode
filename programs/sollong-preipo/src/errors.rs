@@ -12,6 +12,8 @@ pub enum SollongError {
     OwError,
     #[msg("Merkle Tree Error")]
     MerkleError,
+    #[msg("Merkle tree is ampty, Please set a value")]
+    MerkleIsEmptyError,
     #[msg("Please call the 'buy' method for non-whitelisted purchases")]
     FunctionCallError,
     #[msg("Please call the 'buy_from_whitelist' method for whitelisted purchases")]

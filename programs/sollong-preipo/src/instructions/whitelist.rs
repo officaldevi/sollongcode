@@ -20,6 +20,7 @@ pub fn set_white_list_status(ctx: Context<OwOpInRound>, is_enabled: bool) -> Res
     let metadata = &ctx.accounts.metadata;
 
     require!(ctx.accounts.user.key() == metadata.owner, SollongError::OwError);
+    require!(round_stock.merkle_root_hash.iter().all(|&x|x!=0), SollongError::MerkleIsEmptyError);
 
     round_stock.whitelist_enabled = is_enabled;
 
