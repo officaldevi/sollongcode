@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::program::{invoke};
-use anchor_lang::solana_program::system_instruction::{transfer};
+use anchor_lang::solana_program::program::invoke;
+use anchor_lang::solana_program::system_instruction::transfer;
 use merkletreers::node::{Node, Side};
 use merkletreers::merkle_proof_check::merkle_proof_check;
 use merkletreers::utils::hash_it;

@@ -3,6 +3,8 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct Metadata {
     pub owner: Pubkey,
+    pub owner_validate_time: u64,
+    pub withdraw_to: Pubkey,
     pub round_index: u8,
     pub bump: u8
 }

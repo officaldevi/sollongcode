@@ -5,8 +5,7 @@ pub mod create_user_account;
 pub mod owner;
 pub mod set_time;
 pub mod set_buy_share_limit;
-pub mod owner_withdraw;
-pub mod close_account;
+pub mod withdraw;
 pub mod init;
 pub mod whitelist;
 
@@ -17,7 +16,6 @@ pub use create_user_account::*;
 pub use owner::*;
 pub use set_time::*;
 pub use set_buy_share_limit::*;
-pub use owner_withdraw::*;
-pub use close_account::*;
+pub use withdraw::*;
 pub use init::*;
 pub use whitelist::*;

@@ -13,11 +13,13 @@ pub struct CreateFinancial<'info> {
     /// seeds = [round_index, "financial", financial_index]
     #[account(init, payer = user, space=19, seeds = [&[round_stock.index][..], "financial".as_bytes(), &[round_stock.financial_index][..]], bump)]
     pub financial: Account<'info, Financial>,
+    #[account(address = anchor_lang::solana_program::sysvar::clock::ID)]
+    pub clock: Sysvar<'info, Clock>,
     pub system_program: Program<'info, System>
 }
 
 pub fn create_financial_account(ctx: Context<CreateFinancial>) -> Result<()> {
-    require!(ctx.accounts.user.key() == ctx.accounts.metadata.owner, SollongError::OwError);
+    require!(ctx.accounts.metadata.check_owner(&ctx.accounts.user.key() , ctx.accounts.clock.unix_timestamp as u64), SollongError::OwError);
 
     let financial = &mut ctx.accounts.financial;
     let round = &mut ctx.accounts.round_stock;

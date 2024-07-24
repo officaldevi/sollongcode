@@ -8,7 +8,7 @@ pub enum SollongError {
     InsufficientBalance,
     #[msg("Not in the current participation time period.")]
     TimeError,
-    #[msg("Only the owner can call")]
+    #[msg("Owner authentication failed")]
     OwError,
     #[msg("Merkle Tree Error")]
     MerkleError,

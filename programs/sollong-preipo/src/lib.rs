@@ -51,12 +51,6 @@ pub mod sollong_preipo {
         instructions::buy_from_whitelist(ctx, buy_shares, proofs)
     }
 
-
-    pub fn change_owner(ctx: Context<OwOp>, new_owner: Pubkey) -> Result<()>{
-        instructions::change_owner(ctx, new_owner)
-    }
-
-
     pub fn set_time(ctx: Context<OwOpInRound>, start_time: u64, end_time: u64) -> Result<()> {
         instructions::set_time(ctx, start_time, end_time)
     }
@@ -67,7 +61,7 @@ pub mod sollong_preipo {
     }
 
 
-    pub fn owner_withdraw(ctx: Context<OwWithdraw>) -> Result<()> {
-        instructions::owner_withdraw(ctx)
+    pub fn owner_withdraw(ctx: Context<Withdraw>) -> Result<()> {
+        instructions::withdraw(ctx)
     }
 }

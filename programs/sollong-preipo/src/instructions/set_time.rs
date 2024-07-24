@@ -5,9 +5,8 @@ use crate::instructions::OwOpInRound;
 
 pub fn set_time(ctx: Context<OwOpInRound>, start_time: u64, end_time: u64) -> anchor_lang::Result<()> {
     let round_stock = &mut ctx.accounts.round_stock;
-    let metadata = &ctx.accounts.metadata;
 
-    require!(ctx.accounts.user.key() == metadata.owner, SollongError::OwError);
+    require!(ctx.accounts.metadata.check_owner(&ctx.accounts.user.key() , ctx.accounts.clock.unix_timestamp as u64), SollongError::OwError);
 
     round_stock.start_timestamp = start_time;
     round_stock.end_timestamp = end_time;
