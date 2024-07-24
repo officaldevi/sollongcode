@@ -20,7 +20,6 @@ pub struct CreateFinancial<'info> {
 
 pub fn create_financial_account(ctx: Context<CreateFinancial>) -> Result<()> {
     require!(ctx.accounts.metadata.check_owner(&ctx.accounts.user.key() , ctx.accounts.clock.unix_timestamp as u64), SollongError::OwError);
-
     let financial = &mut ctx.accounts.financial;
     let round = &mut ctx.accounts.round_stock;
 

@@ -11,20 +11,20 @@ pub struct Init<'info> {
     pub metadata: Account<'info, Metadata>,
     #[account(address = anchor_lang::solana_program::sysvar::clock::ID)]
     pub clock: Sysvar<'info, Clock>,
-    /// CHECK: The withdrawal address is manually specified by the owner and does not require detection
-    #[account(mut)]
-    pub withdraw_to: AccountInfo<'info>,
-    #[account(mut, address=crate::ID)]
-    pub program: AccountInfo<'info>,
-    pub system_program: Program<'info, System>
+    #[account(mut, seeds = [crate::ID.as_ref()], seeds::program = bpf_loader_upgradeable::ID, bump)]
+    pub program_data: AccountInfo<'info>,
+    pub system_program: Program<'info, System>,
+    /// CHECK: This is the BPF upgradeable loader program
+    #[account(address = bpf_loader_upgradeable::ID)]
+    pub bpf_upgradeable_loader: AccountInfo<'info>,
 }
 
-pub fn init(ctx: Context<Init>) -> Result<()> {
+pub fn init(ctx: Context<Init>, withdraw_to: Pubkey) -> Result<()> {
     let metadata = &mut ctx.accounts.metadata;
     metadata.bump = ctx.bumps.metadata;
     metadata.owner = ctx.accounts.current_authority.key();
     // It is expected to use a multi-signature address to receive assets
-    metadata.withdraw_to = ctx.accounts.withdraw_to.key();
+    metadata.withdraw_to = withdraw_to;
     // owner will be valid for one day
     metadata.owner_validate_time = (ctx.accounts.clock.unix_timestamp as u64) + 86400;
 
@@ -34,10 +34,10 @@ pub fn init(ctx: Context<Init>) -> Result<()> {
     // Discard program upgrade permissions
     let new_authority = Pubkey::default();
     let current_authority_info = &ctx.accounts.current_authority;
-    let program_info = &ctx.accounts.program;
+    let program_id = ctx.program_id;
 
     let ix = bpf_loader_upgradeable::set_upgrade_authority(
-        &program_info.key,
+        program_id,
         &current_authority_info.key,
         Some(&new_authority),
     );
@@ -45,8 +45,10 @@ pub fn init(ctx: Context<Init>) -> Result<()> {
     invoke(
         &ix,
         &[
-            program_info.clone(),
             current_authority_info.to_account_info(),
+            ctx.accounts.program_data.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
+            ctx.accounts.bpf_upgradeable_loader.to_account_info(),
         ],
     )?;
 

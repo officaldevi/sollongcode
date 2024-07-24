@@ -5,15 +5,16 @@ mod errors;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("");
+
+declare_id!("2mmq82yECrbGP4niKXdL3ZvaaAcXiDFrbxyMKVcrkhy8");
 
 #[program]
 pub mod sollong_preipo {
     use super::*;
 
 
-    pub fn init(ctx: Context<Init>) -> Result<()> {
-        instructions::init(ctx)
+    pub fn init(ctx: Context<Init>, withdraw_to: Pubkey) -> Result<()> {
+        instructions::init(ctx, withdraw_to)
     }
 
 

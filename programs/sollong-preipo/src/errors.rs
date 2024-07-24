@@ -27,5 +27,5 @@ pub enum SollongError {
     #[msg("The user's purchase share does not meet the minimum share requirement")]
     UserBuySharesLimitMinimum,
     #[msg("The user's purchase share exceeds the maximum purchase share")]
-    UserBuySharesLimitMaximum
+    UserBuySharesLimitMaximum,
 }

@@ -3,7 +3,7 @@ use crate::state::{Metadata, RoundStock};
 
 impl Metadata {
     pub fn check_owner(&self, user: &Pubkey, end_timestamp: u64) -> bool {
-        return self.owner == *user  && self.owner_validate_time <= end_timestamp;
+        return self.owner == *user  && self.owner_validate_time >= end_timestamp;
     }
 }
 
